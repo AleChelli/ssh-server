@@ -84,7 +84,7 @@ io.on('connection',function(socket){
         registry[cmd.id] = cmd;
         console.log("Emitting the following command to the device",cmd)
 
-        socket.emit('angela.client.command',cmd) //This is echoed to devices
+        io.sockets.emit('angela.client.command',cmd) //This is echoed to devices
         //socket.emit('angela.terminal.output',fake_output)//
         console.log("Command successfully emitted");
     })
