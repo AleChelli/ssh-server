@@ -2,11 +2,11 @@
 <script type="text/javascript" src="js/jquery.terminal.js"></script>
 <script type="text/javascript" src="js/socket.io.js"></script>
 <script type="text/javascript">
-var socket = io('http://apio04.cloudapp.net');
+var socket = io('http://sshserver.cloudapp.net');
   socket.on('angela.terminal.output', function (data) {
-  	
+
   	document.terminal.echo(data.output)
-   
+
   });
 $('#terminal').terminal(function(command, term) {
 	document.terminal = term;
@@ -38,14 +38,14 @@ $('#terminal').terminal(function(command, term) {
     }
     else if (command.split(' ')[0] == 'run'){
     	console.log("Running "+command.replace('run ',''))
-		socket.emit('angela.client.command',{cmd:command.replace('run ','')})
+		    socket.emit('angela.client.command',{cmd:command.replace('run ','')})
     }
 	 else {
 	 	document.terminal.echo('Command not found. Type help for a list of commands')
     }
-	
+
         //term.echo('unknown command');
-    
+
 }, { prompt: '>', name: 'test' });
 </script>
 </body>
