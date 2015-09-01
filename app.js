@@ -81,10 +81,10 @@ io.on('connection',function(socket){
             id : cmd.id,
             output : '(Dummy response to command '+data.cmd+')'
         }
-        registry[cmd.id] = cmd; 
+        registry[cmd.id] = cmd;
         console.log("Emitting the following command to the device",cmd)
         socket.emit('angela.client.command',cmd) //This is echoed to devices
-        socket.emit('angela.terminal.output',fake_output)//
+        //socket.emit('angela.terminal.output',fake_output)//
     })
     socket.on('angela.terminal.output',function(data){
         console.log("A physical client returned this output ",data);
