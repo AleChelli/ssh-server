@@ -1,0 +1,52 @@
+<script type="text/javascript" src="components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.terminal.js"></script>
+<script type="text/javascript" src="js/socket.io.js"></script>
+<script type="text/javascript">
+var socket = io('http://apio04.cloudapp.net');
+  socket.on('angela.terminal.output', function (data) {
+  	
+  	document.terminal.echo(data.output)
+   
+  });
+$('#terminal').terminal(function(command, term) {
+	document.terminal = term;
+    if (command == 'help') {
+        term.echo("This is the list of commands");
+        term.echo("login <username> <password>		Logs the user in.");
+        term.echo("logout							Logs the user out.");
+        term.echo("token							Gets the current access token.");
+        term.echo("run <command>					Runs the command on the device.");
+    }
+    else if (command == 'logout') {
+    	delete document.token ;
+    	document.terminal.echo('User successfully logged out')
+    }
+    else if (command == 'token') {
+    	document.terminal.echo(document.token)
+    }
+    else if (command.split(' ')[0] == 'login'){
+    	var t = command.split(' ')
+    	console.log("Attempting login with username "+t[1]+" and pw "+t[2]);
+    	$.post('/authenticate',{username:t[1],password:t[2]})
+   		.done(function(data){
+   			document.terminal.echo("User authenticated with token "+data.token)
+   			document.token = data.token
+   		})
+   		.error(function(){
+   			document.terminal.echo("Error while authenticating")
+   		})
+    }
+    else if (command.split(' ')[0] == 'run'){
+    	console.log("Running "+command.replace('run ',''))
+		socket.emit('angela.client.command',{cmd:command.replace('run ','')})
+    }
+	 else {
+	 	document.terminal.echo('Command not found. Type help for a list of commands')
+    }
+	
+        //term.echo('unknown command');
+    
+}, { prompt: '>', name: 'test' });
+</script>
+</body>
+</html>
